@@ -1,0 +1,47 @@
+buildscript {
+    ext {
+        springBootVersion='3.1.1'
+        springdocVersion = '2.1.0'
+
+        //libs
+        guavaVersion = '32.0.1-jre'
+
+        //testing
+        cucumberVersion = '7.13.0'
+        assertjVersion = '3.23.1'
+        restAssuredVersion='4.5.1'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version "${springBootVersion}" apply false
+    id 'io.spring.dependency-management' version '1.1.2'
+}
+
+repositories {
+    mavenCentral()
+}
+
+subprojects {
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: "java"
+    group = "com.example"
+    version = "0.0.1-SNAPSHOT"
+
+    repositories {
+        mavenCentral()
+    }
+
+    java.sourceCompatibility=JavaVersion.VERSION_17
+    java.targetCompatibility=JavaVersion.VERSION_17
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+            mavenBom "io.cucumber:cucumber-bom:${cucumberVersion}"
+        }
+    }
+}
+
+

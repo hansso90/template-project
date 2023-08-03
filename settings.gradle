@@ -1,0 +1,6 @@
+rootProject.name = 'base-project-2'
+include 'application'
+include 'test-integration'
+
+
+startParameter.excludedTaskNames += ':test-integration:build'
