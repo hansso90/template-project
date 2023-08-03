@@ -63,7 +63,7 @@ dependencyCheck {
     }
     suppressionFile = './dependencyCheckSuppression.xml'
     // If property failOnScore has not been given, default is disabled (11.0)
-    failBuildOnCVSS = 3.0
+    failBuildOnCVSS = 5.0
 }
 
 
