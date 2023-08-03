@@ -1,4 +1,6 @@
 buildscript {
+    // Override because: spring 3.0.x uses version 1.33 which is vulnerable (CVE-2022-1471)
+    ext['snakeyaml.version'] = '2.0'
     ext {
         springBootVersion='3.1.1'
         springdocVersion = '2.1.0'
@@ -10,6 +12,9 @@ buildscript {
         cucumberVersion = '7.13.0'
         assertjVersion = '3.23.1'
         restAssuredVersion='4.5.1'
+
+        //security
+        dependencyCheckPluginVersion = '8.2.1'
     }
 }
 
@@ -17,6 +22,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version "${springBootVersion}" apply false
     id 'io.spring.dependency-management' version '1.1.2'
+    id "org.owasp.dependencycheck" version "${dependencyCheckPluginVersion}"
 }
 
 repositories {
@@ -42,6 +48,22 @@ subprojects {
             mavenBom "io.cucumber:cucumber-bom:${cucumberVersion}"
         }
     }
+}
+
+// See https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html
+dependencyCheck {
+    analyzers {
+        // Disable .NET scanning (required dotnet runtime, prevents errors in build)
+        assemblyEnabled = false
+
+        // turn remote sonetype OSS index errors in warnings, https://github.com/jeremylong/DependencyCheck/issues/5564
+        ossIndex {
+            warnOnlyOnRemoteErrors = true
+        }
+    }
+    suppressionFile = './dependencyCheckSuppression.xml'
+    // If property failOnScore has not been given, default is disabled (11.0)
+    failBuildOnCVSS = 3.0
 }
 
 
